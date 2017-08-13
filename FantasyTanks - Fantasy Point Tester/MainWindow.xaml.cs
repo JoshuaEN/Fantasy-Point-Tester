@@ -118,6 +118,7 @@ namespace FantasyTanks___Fantasy_Point_Tester
 
                 
                 var skippedReplays = 0;
+                var hasShownMissingTankError = false;
                 foreach (var path in files.OrderBy(p => p))
                 {
                     Replay replay;
@@ -131,8 +132,21 @@ namespace FantasyTanks___Fantasy_Point_Tester
                         skippedReplays += 1;
                         continue;
                     }
-                    var vehs = new PlayerCollection(replay);
-                    this.LoadedReplays.Add(vehs);
+
+                    try
+                    {
+                        var vehs = new PlayerCollection(replay);
+                        this.LoadedReplays.Add(vehs);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        skippedReplays += 1;
+                        if(hasShownMissingTankError == false)
+                        {
+                            MessageBox.Show(ex.Message, "An Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
+                            hasShownMissingTankError = true;
+                        }
+                    }
                 }
 
                 var playerStatsByPlayer = new Dictionary<int, List<ReplayPlayer>>();

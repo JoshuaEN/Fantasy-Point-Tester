@@ -49,6 +49,11 @@ namespace FantasyTanks___Fantasy_Point_Tester
                         }
                         this.tankCache = Tanks.FindByTag(version, this.TankTag);
                     }
+
+                    if (this.tankCache == null)
+                    {
+                        throw new ArgumentException($"Failed to locate Tank with tag {this.TankTag} in Tank List for version {version}\n\nSkipping replay.");
+                    }
                 }
 
                 return this.tankCache;
